@@ -1,0 +1,101 @@
+/* Nav bar */
+@media (min-width: 768px) and (max-width: 992px){
+    .navbar-expand-lg {
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-flow: row nowrap;
+        flex-flow: row nowrap;
+        -webkit-box-pack: start;
+        -ms-flex-pack: start;
+        justify-content: flex-start;
+    }
+    .navbar-expand-lg .navbar-toggler {
+        display: none;
+    }
+    .navbar-expand-lg .navbar-collapse {
+        display: -webkit-box!important;
+        display: -ms-flexbox!important;
+        display: flex!important;
+        -ms-flex-preferred-size: auto;
+        flex-basis: auto;
+    }
+    .navbar-expand-lg>.container, .navbar-expand-lg>.container-fluid {
+        -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap;
+    }
+    .container {
+        max-width: 840px;
+    }
+    .navbar-expand-lg .navbar-nav {
+        -ms-flex-direction: row;
+        flex-direction: row;
+    }
+    .navbar-expand-lg .navbar-nav .nav-link {
+        padding-right: .5rem;
+        padding-left: .5rem;
+    }
+    .navbar-expand-lg .navbar-nav .dropdown-menu {
+        position: absolute;
+    }
+}
+
+/* header */
+.bd-title {
+    margin-top:1rem;
+    margin-bottom:.5rem;
+    font-weight:300
+}
+@media (min-width:576px) {
+    .bd-title {
+        font-size:3rem
+    }
+}
+
+.bd-lead {
+    font-size:1.125rem;
+    font-weight:300
+}
+@media (min-width:576px) {
+    .bd-lead {
+        max-width:100%;
+        margin-bottom:1rem;
+        font-size:1.5rem
+    }
+}
+.btn-bd-primary {
+    font-weight:500;
+    color:#7952b3;
+    border-color:#7952b3
+}
+.btn-bd-primary:active,.btn-bd-primary:hover {
+    color:#fff;
+    background-color:#7952b3;
+    border-color:#7952b3
+}
+
+/* Cards */
+.main-padding {
+    padding-top: 0rem !important;
+    padding-right: 3rem !important;
+    padding-bottom: 3rem !important;
+    padding-left: 3rem !important;
+}
+.card-group-name {
+    margin-top: 30px;
+}
+.card-text {
+    color:#6c757d
+}
+.card {
+    border: 0;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.25), 0 2px 4px rgba(0, 0, 0, 0.125);
+}
+.card:link {color:#343a40} /* 未访问的链接 */
+.card:visited {color:#343a40} /* 已访问的链接 */
+.card:hover {color: #343a40} /* 鼠标移动到链接上 */
+.card:active {color:#343a40} /* 选定的链接 */
+.card-img-top {
+cursor: pointer;
+    transition: all 0.6s;
+}
+.card-img-top:hover {transform: scale(0.95);}
