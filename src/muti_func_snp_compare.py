@@ -1,13 +1,12 @@
-#!/data/user/yangzz/worktools/anaconda3/bin/python
-###  #!/usr/bin/env python3
+
+#!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 """
 @author:Yang Zhengzhao
-@file:finalgeno.py
-@time:2018/7/2417:35
+@time:2021/04/19
 """
 
-from __future__ import division  # very important !!!!
+from __future__ import division
 import os
 import gzip
 import sys
@@ -22,7 +21,7 @@ def error(msg):
 
 
 def IsGeno(geno):
-    if len(geno)== 3 and geno[1] == '/' and geno != "./.":
+    if len(geno) == 3 and geno[1] == '/' and geno != "./.":
         return 1
     else:
         return 0
@@ -37,7 +36,7 @@ def IsALT(geno):
 #
 
 
-def IsHomo(geno):  #判断纯合
+def IsHomo(geno): 
     if geno[0] == geno[2]:
         return 1
     else:
@@ -45,7 +44,7 @@ def IsHomo(geno):  #判断纯合
 #
 
 
-def Isunconsistent(g1, g2):   #判断父母本差异密度
+def Isunconsistent(g1, g2):  
     if g1 == g2:
         return 0
     else:
@@ -72,8 +71,8 @@ def ChangeGQ(gt, gq):
 #
 
 
-def GenoPhase(infile, bin_size, two_diff_level,
-              sample, DSR_count, mask_cnv, sample1, sample2, chromosome,
+def GenoPhase(infile, bin_size, two_diff_level, length,
+              sample, DSR_count, mask_cnv, chromosome,
               DP_high, DP_low, GQ_sample, LEVEL, outfile,
               chr_col=1, pos_col=2, ref_col=3, alt_col=4, s1_col=5, s2_col=6):
     # open the infile
@@ -92,17 +91,10 @@ def GenoPhase(infile, bin_size, two_diff_level,
         exit(-1)
     #
     # init
-    length = {'chr1A': '594102056', 'chr1B': '689851870', 'chr1D': '495453186',
-              'chr2A': '780798557', 'chr2B': '801256715', 'chr2D': '651852609',
-              'chr3A': '750843639', 'chr3B': '830829764', 'chr3D': '615552423', 
-              'chr4A': '744588157', 'chr4B': '673617499', 'chr4D': '509857067',
-              'chr5A': '709773743', 'chr5B': '713149757', 'chr5D': '566080677',
-              'chr6A': '618079260', 'chr6B': '720988478', 'chr6D': '473592718',
-              'chr7A': '736706236', 'chr7B': '750620385', 'chr7D': '638686055',
-              'chrUn': '480980714'}
+
     #
     if DSR_count == 'on':  # counting differnt snp number between two samples with alt genotype
-        print("\t".join(['CHR', 'start', 'end', 'DSR']))
+
         firstline = IN.readline().strip()
         item = firstline.strip().split("\t")
         firstpos = int(item[pos_col - 1])
@@ -154,7 +146,18 @@ def GenoPhase(infile, bin_size, two_diff_level,
                 count_miss_num += 1
 
         #
-        final_bin_size = int(length[chr])
+        if length == "default":
+            chr_length = {'chr1A': '594102056', 'chr1B': '689851870', 'chr1D': '495453186',
+                    'chr2A': '780798557', 'chr2B': '801256715', 'chr2D': '651852609',
+                    'chr3A': '750843639', 'chr3B': '830829764', 'chr3D': '615552423', 
+                    'chr4A': '744588157', 'chr4B': '673617499', 'chr4D': '509857067',
+                    'chr5A': '709773743', 'chr5B': '713149757', 'chr5D': '566080677',
+                    'chr6A': '618079260', 'chr6B': '720988478', 'chr6D': '473592718',
+                    'chr7A': '736706236', 'chr7B': '750620385', 'chr7D': '638686055',
+                    'chrUn': '480980714'}
+            final_bin_size = int(chr_length[chr])
+        else:
+            final_bin_size = int(length)
         bin_final = final_bin_size - start
         DSR = count_diff_num*bin_final/(bin_final-count_miss_num)
         print("\t".join(["%s" % chr, "%s" % start, "%s" % final_bin_size, "%s" % DSR]))
@@ -171,13 +174,11 @@ def GenoPhase(infile, bin_size, two_diff_level,
                 break
             count += buffer.count('\n')
         thefile.close()
-
-        chr = chromosome
         if count > 1:
-            firstline = IN.readline().strip()
             lis = []
             for line in IN:
                 tokens = line.strip().split("\t")
+                chr = tokens[0]
                 start = tokens[1]
                 end = tokens[2]
                 diff = tokens[3]
@@ -192,24 +193,20 @@ def GenoPhase(infile, bin_size, two_diff_level,
             frame.loc[(high_level >= frame[3]) & (low_level < frame[3]), 5] = 'mid'
             frame.to_csv(outfile, sep='\t', na_rep='Na', float_format='%.1f', columns=[0, 1, 2, 5], header=False, index=False)
         else:
-            diff_file = open(outfile,'w')
+            diff_file = open(outfile, 'w')
             diff_file.close()
+
     if mask_cnv == 'on':
-        readline = IN.readlines()[1:]
-        start = 1
-        end = 1000001
-        for line in readline:
+        for line in IN:
             tokens = line.strip().split("\t")
-            RD = float(tokens[0])
-            filename1 = infile.strip().split("/")
-            filename2 = filename1[-1].strip().split(".")
-            filename3 = filename2[0]
+            CHR = tokens[0]
+            start = tokens[1]
+            end = tokens[2]
+            RD = float(tokens[3])
             if RD <= 0.5:
-                print(filename3, start, end, "ownCNV_deletion", sample, sep="\t")
+                print(CHR, start, end, "ownCNV_deletion", sep="\t")
             if RD >= 1.5:
-                print(filename3, start, end, "ownCNV_duplication", sample, sep="\t")
-            start += bin_size
-            end += bin_size
+                print(CHR, start, end, "ownCNV_duplication", sep="\t")
     #
     if infile:
         IN.close()
@@ -222,15 +219,7 @@ from optparse import OptionParser
 
 # ===========================================
 def main():
-    usage = "Usage: %prog [-i <input>] [-b 1000] [-o <output>]\n" \
-            "Author : Yang, zhengzhao; yangzhengzhao@cau.edu.cn; 2018-06-07\n" \
-            "Description: Identify genotype bins orientation from parents.\n" \
-            "Input format:\n" \
-            "   chr pos geno_p1 geno_p2 geno_son\n" \
-            "Output format:\n" \
-            "   chr start end total eqp1 eqp2 orient\n" \
-            "   chr1A   10001 20000 20  18  2   1\n"
-    #
+    usage = "Author : Yang, zhengzhao; yangzhengzhao@cau.edu.cn; 2021-04\n" \
     parser = OptionParser(usage)
     parser.add_option("-i", dest="infile",
                       help="Input file, use STDIN if omit; "
@@ -262,14 +251,6 @@ def main():
                       help="column id for offSpring [default: %default]",
                       metavar="INT",
                       default=1)
-    parser.add_option("--sample1", dest="sample1",
-                      help="column id for offSpring [default: %default]",
-                      metavar="STRING",
-                      default='a')
-    parser.add_option("--sample2", dest="sample2",
-                      help="column id for offSpring [default: %default]",
-                      metavar="STRING",
-                      default='b')
     parser.add_option("--chromosome", dest="chromosome",
                       help="column id for offSpring [default: %default]",
                       metavar="STRING",
@@ -281,7 +262,7 @@ def main():
     parser.add_option("--LEVEL", dest="LEVEL",
                       help="column id for offSpring [default: %default]",
                       metavar="INT",
-                      default="10, 1000")                                                        
+                      default="10,1000")                                                        
     parser.add_option("-c", dest="chr_col",
                       help="column id for chromosome [default: %default]",
                       metavar="INT",
@@ -323,8 +304,7 @@ def main():
               mask_cnv=options.mask_cnv, DP_high=options.DP_high, DSR_count=options.DSR_count,
               GQ_sample=options.GQ_sample, DP_low=options.DP_low, LEVEL=options.LEVEL,
               sample=options.sample, two_diff_level=options.two_diff_level,
-              sample1=options.sample1, sample2=options.sample2, chromosome=options.chromosome,
-              chr_col=int(options.chr_col), pos_col=int(options.pos_col),
+              chromosome=options.chromosome, chr_col=int(options.chr_col), pos_col=int(options.pos_col),
               ref_col=int(options.ref_col), alt_col=int(options.alt_col),
               s1_col=int(options.s1_col), s2_col=int(options.s2_col))
     #
