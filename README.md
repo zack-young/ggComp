@@ -1,1 +1,2 @@
-# GermplasmComp
+# GGComp
+Genomic-based Germplasm COMPare
