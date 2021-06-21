@@ -1,22 +1,157 @@
 # ggComp
 ggComp (Genomic-based Germplasm Compare) is a novel strategy fitting complex genomes to evaluate germplasm resources by identifying shared genomic regions and excluding pervasive copy number variations for pairwise accessions. 
-Performing copy number analysis from targeted capture high-throughput sequencing has been a challenging task. This involves binning the targeted region, calculating the log ratio of the read depths between the sample and the reference, and then stitching together thousands of these data points into numerous segments (especially in the context of cancer) to derive the copy number state of genomic regions. Recently, several tools have been developed to adequately detect both somatic as well as germline CNVs. However, review and interpretation of these variants in a clinical as well as research setting is a daunting task. This can involve frequent switches back and forth from a static image to numerous tabular files resulting in an exasperated reviewer.  
- ReconCNV has been developed to overcome this challenge by providing interactive dashboard for hunting copy number variations (CNVs) from high-throughput sequencing data. The tool has been tested for targeted gene panels (including exome data). Python3's powerful visualization and data manipulation modules, namely Bokeh and Pandas, are utilized to create these dynamic visualizations. ReconCNV can be readily applied to most CNV calling algorithms with simple modifications to the configuration file. 
+
 ## Installation
-The easiest way to get started with reconCNV is via `conda`. Using `conda` ensures you are running Python 3.6 (using which reconCNV was coded) and all dependencies are installed within an virtual environment. This avoids dependency conflicts with existing programs. If `conda` is not available on your system, a minimal installer can be installed using [Miniconda](https://docs.conda.io/en/latest/miniconda.html).
+ggComp is a light weight software that only need to make sure Python 3.8.5, samtools 1.4 and bcftools 1.9 are well installed and set in environment path.
 
-light weight
-1. Clone the reconCNV repository
-    ```
-    git clone https://github.com/zack-young/ggComp.git
-    ```
-2. check environment bedtools bcftools
-
-3. You are now ready to use reconCNV!
-
-Usage example:
+Clone the ggComp repository
+```
+git clone https://github.com/zack-young/ggComp.git
+```
 
 
+## Usage
+
+```
+
+Program: ggComp (A pairwised comparison method to identify similar genetic regions and shared CNV regions between accessions.)
+Version: 1.0
+
+Usage:   ggComp [-v|--version] [-h|--help] <command> <argument>
+
+Commands:
+
+    CNV_detector            detect CNV regions
+
+    SNP_extractor           extract SNP information from VCF
+
+    DSR_counter             compute the DSR
+
+    SGR_PHR_definer         identify SGR and PHR
+
+    HMM_smoother            smoothing SGR and PHR result using HMM
+```
+
+### CNV_detector
+`detect CNV regions`
+
+```
+Usage: ggComp CNV_detector <--chr_lis <STRING>>  <--single_CNV <FILE> | --pair_CNV <FILE>>
+
+    --chr_lis <STRING>      chromosomes that listed in behind file 
+                            e.g. 'chr1A chr1B chr1D'
+
+Options:
+
+    --single_CNV            detect CNV region of samples ::: input file contains chromosme
+                            list, path of BED file, path of BAM file and output file
+                            e.g. chromosome BED BAM output_dev
+                            produce three files: *.mask_CNV
+                                                 *.mask_CNV_deletion
+                                                 *.mask_CNV_duplication
+ 
+    --pair_CNV              identify pairwise sample specific CNV regions and shared CNV
+                            regions::: input file contains sample names, path of CNV file
+                            and path of output file directory
+                            e.g. sample1_name sample1_directory sample2_name sample2_directory pair_dircetory
+
+chromosome length in bed file shall not exceed the limit of bedtools (400Mb)
+see test/single_CNV.config and test/pair_CNV.config for more details
+(colunms separated by tab)
+```
+
+### SNP_extractor
+`extract SNP information from VCF for DSR calculation`
+
+```
+Usage: ggComp SNP_extractor <--config <FILE>>
+
+Options:"
+
+    --config <FILE>         file contains path of vcf files, sample ID list in vcf for
+                            extracting(separated by ','), path of output file
+                            e.g. VCF_file    vcf_ID   output_file
+
+see test/SNP_extractor.config for more details
+(colunms separated by tab)
+```
+
+### DSR_counter
+`compute the DSR (Different SNP ratio) by bin`
+
+```
+Usage: ggComp DSR_counter <--config <file>>  [Options]
+
+    --config <FILE>         file contains：path of files contain SNP inforamtion;
+                            path of output files; end position of chromosomes
+                            (use 'defalut' to call built-in end position of each chromosomes)
+                            e.g. SNP_file output_file END\default
+
+Options:
+
+    --DP_low <INT>          exclude SNP with DP <= <int>. default 3
+
+    --DP_high <INT>         exclude SNP with DP >= <int>. default 99
+
+    --GQ_sample <INT>       exclude SNP with GQ <= <int>. default 8
+
+    --bin_size <INT>        bln size. default 1000000
+
+see test/DSR_counter.config for more details (colunms separated by tab)
+```
+
+### SGR_PHR_definer
+`detect SGR (Similar Genetic Regions) and PHR (Polymorphism Hotspot Regions) between sample pairs`
+
+```
+Usage: ggComp SGR_PHR_definer <--noCNV <file> | --plus_CNV <file>> [Options]
+
+    --no_CNV <FILE>         ignore CNV
+                            file contains path of files contain DSR information
+                            and path of output files.
+                            e.g. DSR_file  output
+
+    --plus_CNV <FILE>       take CNV into consideration"  
+                            file contains path of files contain DSR information
+                            path of CNV file and path of output files.
+                            e.g. DSR_file  CNV_file output
+
+Options
+
+    --LEVEL <INT>           threshold divide SGR and PHR. default 10
+
+see test/SGR_PHR_definer.config for more details (colunms separated by tab)
+```
+
+### HMM_smoother
+`smoothing SGR (Similar Genetic Regions) and PHR (Polymorphism Hotspot Regions) result using HMM`
+
+```
+Usage: ggComp HMM_smoother [Options]
+
+Options:
+
+    --input <FOLDER>        folder path of SGR and PHR phasing results
+
+    --output <FOLDER>       output path
+
+    --folder_lis <FILE>     containing a list of folder names of SGR and PHR phasing
+                            results that are goining to be smoothed
+                            e.g. C2_C10
+                                C2_C10
+
+    --processes <INT>       (optional) maximum worker processes"
+                            default: 2"
+
+    --train                 (optional) train the model using input data (otherwise using"
+                            the model published in the article)"
+
+    --niter <INT>           (optional) maximum number of iterations to perform in training"
+                            default: 60"
+```
+
+
+## Quickstart with an example
 ### CNV_detector            
 detect CNV regions
 
@@ -73,9 +208,4 @@ sh WheatComp.sh HMM_smoother \
     --train \
     --niter 30
 ```
--i: 数据所处文件夹路径
--f：样本比较文件夹名称列表文件
--o：输出目录路径
--p：[Optional] 最大并发数，默认2
--t：[Optional] 置位则重新fit模型
--n：[Optional] 训练模型时最大迭代次数。如果不输入此项则默认最多迭代60次
+

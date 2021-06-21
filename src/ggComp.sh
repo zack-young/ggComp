@@ -172,15 +172,15 @@ Version: 1.0"
     echo ""
     echo "Commands:"
     echo ""
-    echo "    CNV_detector            detect CNV regions"
+    echo "   CNV_detector            detect CNV regions"
     echo ""
-    echo "    SNP_extractor           extract SNP information from VCF"
+    echo "   SNP_extractor           extract SNP information from VCF"
     echo ""
-    echo "    DSR_counter             compute the DSR"
+    echo "   DSR_counter             compute the DSR"
     echo ""
-    echo "    SGR_PHR_definer         identify SGR and PHR"
+    echo "   SGR_PHR_definer         identify SGR and PHR"
     echo ""
-    echo "    HMM_smoother            smoothing SGR and PHR result using HMM"
+    echo "   HMM_smoother            smoothing SGR and PHR result using HMM"
 
 } 
 
@@ -189,6 +189,7 @@ printUsageCNV() {
     echo ""
     echo "About: detect CNV regions"
     echo "Usage: ggComp CNV_detector <--chr_lis <STRING>>  <--single_CNV <FILE> | --pair_CNV <FILE>>"
+    echo ""
     echo "   --chr_lis <STRING>    chromosomes that listed in behind file "
     echo "                         e.g. 'chr1A chr1B chr1D'"
     echo ""
@@ -227,7 +228,7 @@ printUsageSNP() {
 
 printUsageDSR() {
     echo ""
-    echo "About: compute the DSR"
+    echo "About: compute the DSR (Different SNP ratio) by bin"
     echo "Usage: ggComp DSR_counter <--config <file>>  [Options]"
     echo ""
     echo "   --config <FILE>       file contains：path of files contain SNP inforamtion;" 
