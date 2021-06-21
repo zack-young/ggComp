@@ -71,10 +71,8 @@ def ChangeGQ(gt, gq):
 #
 
 
-def GenoPhase(infile, bin_size, two_diff_level, length,
-              sample, DSR_count, mask_cnv, chromosome,
-              DP_high, DP_low, GQ_sample, LEVEL, outfile,
-              chr_col=1, pos_col=2, ref_col=3, alt_col=4, s1_col=5, s2_col=6):
+def GenoPhase(infile, bin_size, two_diff_level, length, DSR_count, mask_cnv, DP_high, DP_low,
+              GQ_sample, LEVEL, outfile, chr_col=1, pos_col=2, s1_col=5, s2_col=6):
     # open the infile
     try:
         if infile:
@@ -94,7 +92,6 @@ def GenoPhase(infile, bin_size, two_diff_level, length,
 
     #
     if DSR_count == 'on':  # counting differnt snp number between two samples with alt genotype
-
         firstline = IN.readline().strip()
         item = firstline.strip().split("\t")
         firstpos = int(item[pos_col - 1])
@@ -126,10 +123,11 @@ def GenoPhase(infile, bin_size, two_diff_level, length,
             GQ2 = tokens[s2_col + 1]
             lis3_1 = ChangeGQ(GT2, GQ2)
             GQ2 = lis3_1[0]
+            #print("\t".join(["%s" % DP_low[0], "%s" % DP_high[0], "%s" % GQ_sample]))
             #
             while pos > end:
                 DSR = count_diff_num*bin_size/(bin_size-count_miss_num)
-                print("\t".join(["%s" % chr, "%s" % start, "%s" % end, "%s" % DSR]))
+                print("\t".join(["%s" % chr, "%s" % start, "%s" % end, "%.2f" % DSR]))
                 # #
                 start += bin_size
                 end += bin_size
@@ -160,13 +158,13 @@ def GenoPhase(infile, bin_size, two_diff_level, length,
             final_bin_size = int(length)
         bin_final = final_bin_size - start
         DSR = count_diff_num*bin_final/(bin_final-count_miss_num)
-        print("\t".join(["%s" % chr, "%s" % start, "%s" % final_bin_size, "%s" % DSR]))
+        print("\t".join(["%s" % chr, "%s" % start, "%s" % final_bin_size, "%.2f" % DSR]))
     #
     if two_diff_level == 'on':
         count = 0
         level = LEVEL.strip().split(",")
         low_level = float(level[0])
-        high_level = float(level[1])
+        #high_level = float(level[1])
         thefile = open(infile)
         while True:
             buffer = thefile.read(1024*8192)
@@ -174,7 +172,8 @@ def GenoPhase(infile, bin_size, two_diff_level, length,
                 break
             count += buffer.count('\n')
         thefile.close()
-        if count > 1:
+        print(level,low_level,count)
+        if count >= 1:
             lis = []
             for line in IN:
                 tokens = line.strip().split("\t")
@@ -188,9 +187,9 @@ def GenoPhase(infile, bin_size, two_diff_level, length,
             frame[3] = frame[3].astype(int)
             frame[1] = frame[1].astype(int)
             frame[2] = frame[2].astype(int)
-            frame.loc[(high_level < frame[3]), 5] = 'high'
-            frame.loc[(low_level >= frame[3]), 5] = 'low'
-            frame.loc[(high_level >= frame[3]) & (low_level < frame[3]), 5] = 'mid'
+            frame.loc[(low_level < frame[3]), 5] = 'PHR'
+            frame.loc[(low_level >= frame[3]), 5] = 'SGR'
+            #frame.loc[(high_level >= frame[3]) & (low_level < frame[3]), 5] = 'mid'
             frame.to_csv(outfile, sep='\t', na_rep='Na', float_format='%.1f', columns=[0, 1, 2, 5], header=False, index=False)
         else:
             diff_file = open(outfile, 'w')
@@ -219,7 +218,7 @@ from optparse import OptionParser
 
 # ===========================================
 def main():
-    usage = "Author : Yang, zhengzhao; yangzhengzhao@cau.edu.cn; 2021-04\n" \
+    usage = "Author : Yang, zhengzhao; yangzhengzhao@cau.edu.cn; 2021-04\n"
     parser = OptionParser(usage)
     parser.add_option("-i", dest="infile",
                       help="Input file, use STDIN if omit; "
@@ -251,14 +250,10 @@ def main():
                       help="column id for offSpring [default: %default]",
                       metavar="INT",
                       default=1)
-    parser.add_option("--chromosome", dest="chromosome",
-                      help="column id for offSpring [default: %default]",
-                      metavar="STRING",
-                      default='chr1A')
-    parser.add_option("--sample", dest="sample",
+    parser.add_option("--length", dest="length",
                       help="column id for offSpring [default: %default]",
                       metavar="INT",
-                      default=1)
+                      default="default")
     parser.add_option("--LEVEL", dest="LEVEL",
                       help="column id for offSpring [default: %default]",
                       metavar="INT",
@@ -271,14 +266,6 @@ def main():
                       help="column id for position [default: %default]",
                       metavar="INT",
                       default=2)
-    parser.add_option("-r", dest="ref_col",
-                      help="column id for position [default: %default]",
-                      metavar="INT",
-                      default=3)
-    parser.add_option("-a", dest="alt_col",
-                      help="column id for position [default: %default]",
-                      metavar="INT",
-                      default=4)
     parser.add_option("-1", dest="s1_col",
                       help="column id for 1st parent [default: %default]",
                       metavar="INT",
@@ -303,9 +290,8 @@ def main():
     GenoPhase(infile=options.infile, bin_size=int(options.bin_size), outfile=options.outfile,
               mask_cnv=options.mask_cnv, DP_high=options.DP_high, DSR_count=options.DSR_count,
               GQ_sample=options.GQ_sample, DP_low=options.DP_low, LEVEL=options.LEVEL,
-              sample=options.sample, two_diff_level=options.two_diff_level,
-              chromosome=options.chromosome, chr_col=int(options.chr_col), pos_col=int(options.pos_col),
-              ref_col=int(options.ref_col), alt_col=int(options.alt_col),
+              two_diff_level=options.two_diff_level,
+              chr_col=int(options.chr_col), pos_col=int(options.pos_col), length=options.length,
               s1_col=int(options.s1_col), s2_col=int(options.s2_col))
     #
 #

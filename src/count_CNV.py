@@ -30,7 +30,7 @@ def Count(infile):
     for line in IN:
         item = line.strip("\n").split("\t")
         if item[3] != '0':
-            lis.append(item[0])
+            lis.append(item[3])
     mode_num = float(stats.mode(lis)[0][0])
     print("%.2f" % mode_num)
 
