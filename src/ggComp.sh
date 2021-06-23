@@ -398,7 +398,7 @@ if test $MODE = "DSR_counter" ;then
         output=`echo $lines|awk '{print $2}'`
         length=`echo $lines|awk '{print $3}'`
         python ${sp}/muti_func_snp_compare.py --DSR_count on -i ${input} --length ${length} \
-         --DP_low ${DP_low} --DP_high ${DP_high} --GQ_sample ${GQ_sample} -b ${bin_size} -o ${output}
+        --DP_low ${DP_low} --DP_high ${DP_high} --GQ_sample ${GQ_sample} -b ${bin_size} -o ${output}
     done < $config
 fi
 
@@ -446,36 +446,36 @@ if test $MODE = "HMM_smoother" ;then
     fi
 
     (>&2 echo -n "Checking environment ... ")
-    python3 0_check_lib.py
+    python3 HMM_1_check_lib.py
     (>&2 echo "Done")
 
     current=`date "+%Y-%m-%d-%H:%M:%S"`
     (>&2 echo "Smoothing project: "$current)
 
     (>&2 echo -n "Building project ... ")
-    python3 1_copy_datafile.py $input $output $FolderNameList $current $Procs
+    python3 HMM_2_copy_datafile.py $input $output $FolderNameList $current $Procs
     (>&2 echo "Done")
 
     (>&2 echo -n "Pre-processing data ... ")
-    python3 2_sort_and_pre-process.py $output $current $Procs
+    python3 HMM_3_sort_and_pre-process.py $output $current $Procs
     (>&2 echo "Done")
 
     if ($TrainFlag); then
         (>&2 echo -n "Generating training data ... ")
-        python3 3_make_train_data.py $output $current
+        python3 HMM_4_make_train_data.py $output $current
         (>&2 echo "Done")
 
         (>&2 echo "Training ... ")
-        python3 4_train.py $output $current $Niter > $output/$current/5.3_remake_levelfile.3.py
+        python3 HMM_5_train.py $output $current $Niter > $output/$current/6.3_remake_levelfile.py
         (>&2 echo "Training ... Done")
 
         (>&2 echo -n "Smoothing ... ")
-        cat 5.1_remake_levelfile.1.py $output/$current/5.3_remake_levelfile.3.py 5.2_remake_levelfile.2.py > $output/$current/5_remake_levelfile.py
-        python3 $output/$current/5_remake_levelfile.py $output $current $Procs
+        cat HMM_6.1_remake_levelfile.py $output/$current/HMM_6.3_remake_levelfile.py HMM_6.2_remake_levelfile.py > $output/$current/HMM_6_remake_levelfile.py
+        python3 $output/$current/6_remake_levelfile.py $output $current $Procs
         (>&2 echo "Done")
     else
         (>&2 echo -n "Smoothing ... ")
-        python3 5_remake_levelfile.py $output $current $Procs
+        python3 HMM_6_remake_levelfile.py $output $current $Procs
         (>&2 echo "Done")
     fi
 fi

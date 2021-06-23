@@ -153,37 +153,66 @@ Options:
 
 ## Quickstart with an example
 ### CNV_detector            
-detect CNV regions
+This is the first step of ggComp that detect CNV regions through BAM files.  
+Each BAM file should contain only one chromosome and the chromosome name in first column of config file should consistent with that in BAM file.  
+BED file records bins that going to be processed.  
+Chromosomes that list in --chr_lis may not consistent with config file as chromosomes may be separated into parts in BAM file.  
+e.g. `--chr_lis 'chr1A chr1B'` but in config file is `chr1A.1 chr1A.2 chr1B.2 chr1B.2`.  
 
+**single_CNV.config**
+```
+chr1A   test/CNV_detector/chr1A_11-12Mb.bed test/CNV_detector/C2/chr1A_11-12Mb_C10.bam  test/CNV_detector/C10
+chr1A   test/CNV_detector/chr1A_11-12Mb.bed test/CNV_detector/C2/chr1A_11-12Mb_C2.bam   test/CNV_detector/C2
+```
 ```
 sh src/ggComp.sh CNV_detector --chr_lis chr1A --single_CNV test/single_CNV.config
 ```
 
+**pair_CNV.config**
+```
+C2  test/CNV_detector/C2    C10 test/CNV_detector/C10   test/CNV_detector/C2_C10
+```
 ```
 sh src/ggComp.sh CNV_detector --chr_lis chr1A --pair_CNV test/pair_CNV.config
 ```
 
 ### SNP_extractor
-extract SNP information from VCF
+extract SNP information from VCF, including 'CHROM POS REF ALT GT DP GQ' only biallele by MAF<0.01.
 
+**SNP_extractor.config**
+```
+test/SNP_extractor/chr1A_11-12Mb.bcf    2-90377,10-83979    test/SNP_extractor/chr1A_11-12Mb.SNP_gt
+```
 ```
 sh src/ggComp.sh SNP_extractor --config test/SNP_extractor.config
 ```
 
 ### DSR_counter
-compute the DSR
+compute the DSR from SNP by bins (default bin length: 1000000bp)
 
+**DSR_counter.config**
+```
+test/SNP_extractor/chr1A_11-12Mb.SNP_gt test/DSR_counter/chr1A_11-12Mb.DSR  12000000
+```
 ```
 sh src/ggComp.sh DSR_counter --config test/DSR_counter.config
 ```
 
 ### SGR_PHR_definer
-identify SGR and PHR
+identify SGR and PHR from DSR file
 
+**SGR_PHR_plus_CNV.config**
+```
+test/DSR_counter/chr1A_11-12Mb.DSR  test/CNV_detector/C2_C10/chr1A.C2toC10all_CNV   test/SGR_PHR_definer/chr1A_11-12Mb_combineCNV.level
+```
 ```
 sh src/ggComp.sh SGR_PHR_definer --plus_CNV test/SGR_PHR_plus_CNV.config
 ```
 
+**SGR_PHR_noCNV.config**
+```
+test/DSR_counter/chr1A_11-12Mb.DSR  test/SGR_PHR_definer/chr1A_11-12Mb_noCNV.level
+```
 ```
 sh src/ggComp.sh SGR_PHR_definer --no_CNV test/SGR_PHR_noCNV.config
 ```
