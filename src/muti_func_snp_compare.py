@@ -172,7 +172,6 @@ def GenoPhase(infile, bin_size, two_diff_level, length, DSR_count, mask_cnv, DP_
                 break
             count += buffer.count('\n')
         thefile.close()
-        print(level,low_level,count)
         if count >= 1:
             lis = []
             for line in IN:
@@ -189,8 +188,7 @@ def GenoPhase(infile, bin_size, two_diff_level, length, DSR_count, mask_cnv, DP_
             frame[2] = frame[2].astype(int)
             frame.loc[(low_level < frame[3]), 5] = 'PHR'
             frame.loc[(low_level >= frame[3]), 5] = 'SGR'
-            #frame.loc[(high_level >= frame[3]) & (low_level < frame[3]), 5] = 'mid'
-            frame.to_csv(outfile, sep='\t', na_rep='Na', float_format='%.1f', columns=[0, 1, 2, 5], header=False, index=False)
+            frame.to_csv(outfile, sep='\t', na_rep='Na', columns=[0, 1, 2, 5], header=False, index=False)
         else:
             diff_file = open(outfile, 'w')
             diff_file.close()

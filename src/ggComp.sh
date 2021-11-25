@@ -49,6 +49,7 @@ bin_size:,LEVEL:,version,folder_lis:,processes:,train,niter:"
                     [ "$2" = "DSR_counter" ] && printUsageDSR
                     [ "$2" = "SGR_PHR_definer" ] && printUsageSGR
                     [ "$2" = "HMM_smoother" ] && printUsageHMMS
+                    [ "$2" = "Visualization" ] && printUsageVisual 
                     exit 0
                     ;;
                 *)
@@ -140,7 +141,7 @@ bin_size:,LEVEL:,version,folder_lis:,processes:,train,niter:"
                 ;;
             --) # No more arguments , , , , 
                 shift
-                [ "$1" = "Pair_lis_generator" -o "$1" = "CNV_detector" -o "$1" = "SNP_extractor" -o "$1" = "DSR_counter" -o "$1" = "SGR_PHR_definer" -o "$1" = "HMM_smoother" ] && MODE=$1
+                [ "$1" = "Pair_lis_generator" -o "$1" = "CNV_detector" -o "$1" = "SNP_extractor" -o "$1" = "DSR_counter" -o "$1" = "SGR_PHR_definer" -o "$1" = "HMM_smoother" -o "$1" = "Visualization" ] && MODE=$1
                 shift
                 break
                 ;;
@@ -181,6 +182,9 @@ Version: 1.0"
     echo "   SGR_PHR_definer         identify SGR and PHR"
     echo ""
     echo "   HMM_smoother            smoothing SGR and PHR result using HMM"
+    echo ""
+    echo "   Visualization           Plot the distribution of SGR PHR and CNV"
+    echo "                           across whole genome"
 
 } 
 
@@ -224,6 +228,20 @@ printUsageSNP() {
     echo "                         e.g. VCF_file    vcf_ID   output_file"
     echo ""
     echo "see test/SNP_extractor.config for more details (colunms separated by tab)"
+}
+
+printUsageVisual() {
+    echo ""
+    echo "About: Plot the distribution of SGR PHR and CNV across whole genome"
+    echo "Usage: ggComp Visualization <--config <FILE>>"
+    echo ""
+    echo "Options:"
+    echo ""
+    echo "   --config <FILE>       file contains path of vcf files, sample ID list in vcf for"
+    echo "                         extracting(separated by ','), path of output file"
+    echo "                         e.g. path    suffix   SAMPLE1    SAMPLE1_name    SAMPLE2 SAMPLE2_name    pdf_path"
+    echo ""
+    echo "see test/plot.config for more details (colunms separated by tab)"
 }
 
 printUsageDSR() {
@@ -343,6 +361,7 @@ if test "$par_num" = 1 ;then
 [ "$par_lis" = "DSR_counter" ] && printUsageDSR && exit 0
 [ "$par_lis" = "SGR_PHR_definer" ] && printUsageSGR && exit 0
 [ "$par_lis" = "HMM_smoother" ] && printUsageHMMS && exit 0
+[ "$par_lis" = "Visualization" ] && printUsageVisual && exit 0
 fi
 #echo $input $output
 
@@ -402,6 +421,23 @@ if test $MODE = "DSR_counter" ;then
     done < $config
 fi
 
+if test $MODE = "Visualization" ;then
+    if [[ -z "$config" ]]; then
+        echo "No config file provided."; exit 1
+    fi
+    while read lines;do
+        path=`echo $lines|awk '{print $1}'`
+        suffix=`echo $lines|awk '{print $2}'`
+        SAMPLE1=`echo $lines|awk '{print $3}'`
+        SAMPLE1_name=`echo $lines|awk '{print $4}'`
+        SAMPLE2=`echo $lines|awk '{print $5}'`
+        SAMPLE2_name=`echo $lines|awk '{print $6}'`
+        pdf_path=`echo $lines|awk '{print $7}'`
+        python ${sp}/ptf_maker.py -p ${path} -s ${suffix} > ${path}/plotfile
+        Rscript ${sp}/graph_diff_sim.R -d ${path} -D ${pdf_path} --sample1 ${SAMPLE1} --sample1_name ${SAMPLE1_name} --sample2 ${SAMPLE2} --sample2_name ${SAMPLE2_name}
+        rm -f  ${path}/plotfile
+    done < $config
+fi
 
 if test $MODE = "SGR_PHR_definer" ;then
     if ($NC) ;then
