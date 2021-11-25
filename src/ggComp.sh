@@ -241,7 +241,7 @@ printUsageVisual() {
     echo "                         extracting(separated by ','), path of output file"
     echo "                         e.g. path    suffix   SAMPLE1    SAMPLE1_name    SAMPLE2 SAMPLE2_name    pdf_path"
     echo ""
-    echo "see test/plot.config for more details (colunms separated by tab)"
+    echo "see test/Visualization.config for more details (colunms separated by tab)"
 }
 
 printUsageDSR() {

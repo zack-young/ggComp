@@ -149,7 +149,19 @@ Options:
     --niter <INT>           (optional) maximum number of iterations to perform in training"
                             default: 60"
 ```
+### Visualization
+`Plot the distribution of SGR PHR and CNV across whole genome`
+```
+"Usage: ggComp Visualization <--config <FILE>>"
 
+Options:
+
+   --config <FILE>       file contains path of vcf files, sample ID list in vcf for"
+                         extracting(separated by ','), path of output file"
+                         e.g. path    suffix   SAMPLE1    SAMPLE1_name    SAMPLE2 SAMPLE2_name    pdf_path"
+
+see test/plot.config for more details (colunms separated by tab)"
+```
 
 ## Quickstart with an example
 ### CNV_detector            
@@ -237,4 +249,12 @@ sh WheatComp.sh HMM_smoother \
     --train \
     --niter 30
 ```
+### Visualization
 
+**SGR_PHR_noCNV.config**
+```
+test/Visualization   .homo_undefined_snp_level.HMMv1 Zang1817    Zang1817    S14 ZXM1341 test/Visualization
+```
+```
+sh src/ggComp.sh Visualization --config test/Visualization.config
+```
