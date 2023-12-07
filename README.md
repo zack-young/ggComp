@@ -233,7 +233,7 @@ sh src/ggComp.sh SGR_PHR_definer --no_CNV test/SGR_PHR_noCNV.config
 smoothing SGR and PHR result using HMM
 #### Smooth only
 ```
-sh WheatComp.sh HMM_smoother \
+sh ggComp.sh HMM_smoother \
     -i /data3/user3/wangwx/projs/HMM_for_yzz_comp/210328-modify/test/data \
     --folder_lis /data3/user3/wangwx/projs/HMM_for_yzz_comp/210328-modify/test/folders.txt \
     -o /data3/user3/wangwx/projs/HMM_for_yzz_comp/210328-modify/test/out\
@@ -241,7 +241,7 @@ sh WheatComp.sh HMM_smoother \
 ```
 #### Train & Smooth
 ```
-sh WheatComp.sh HMM_smoother \
+sh ggComp.sh HMM_smoother \
     -i /data3/user3/wangwx/projs/HMM_for_yzz_comp/210328-modify/test/data \
     --folder_lis /data3/user3/wangwx/projs/HMM_for_yzz_comp/210328-modify/test/folders.txt \
     -o /data3/user3/wangwx/projs/HMM_for_yzz_comp/210328-modify/test/out \
