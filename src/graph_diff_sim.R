@@ -151,20 +151,20 @@ wholen <- c(594102056,
 
 rect(xleft = 900, xright = 930, ybottom = 16, ytop = 18,
      col = color_pad[1], border = color_pad[1]);text(x=c(940), y=c(17),c("SGR"),cex = 1,pos = 4)
-rect(xleft = 900, xright = 930, ybottom = 20, ytop = 22,
-   col = color_pad[3], border = color_pad[3]);text(x=c(940), y=c(21),c("PHR"),cex = 1,pos = 4)
+rect(xleft = 900, xright = 930, ybottom = 18, ytop = 20,
+   col = color_pad[2], border = color_pad[2]);text(x=c(940), y=c(19),c("PHR"),cex = 1,pos = 4)
 rect(xleft = 900, xright = 930, ybottom = 22, ytop = 24,
-     col = color_pad[4], border = color_pad[4]);text(x=c(940), y=c(23),c(paste(SAMPLE1_name,"deletion",sep="")),cex = 1,pos = 4)
+     col = color_pad[3], border = color_pad[3]);text(x=c(940), y=c(23),c(paste(SAMPLE1_name,"deletion",sep="")),cex = 1,pos = 4)
 rect(xleft = 900, xright = 930, ybottom = 24, ytop = 26,
-     col = color_pad[5], border = color_pad[5]);text(x=c(940), y=c(25),c(paste(SAMPLE2_name,"deletion",sep="")),cex = 1,pos = 4)
+     col = color_pad[4], border = color_pad[4]);text(x=c(940), y=c(25),c(paste(SAMPLE2_name,"deletion",sep="")),cex = 1,pos = 4)
 rect(xleft = 900, xright = 930, ybottom = 26, ytop = 28,
-     col = color_pad[6], border = color_pad[6]);text(x=c(940), y=c(27),c("Both_deletion"),cex = 1,pos = 4)
+     col = color_pad[5], border = color_pad[5]);text(x=c(940), y=c(27),c("Both_deletion"),cex = 1,pos = 4)
 rect(xleft = 900, xright = 930, ybottom = 28, ytop = 30,
-     col = color_pad[7], border = color_pad[7]);text(x=c(940), y=c(29),c(paste(SAMPLE1_name,"duplication",sep="")),cex = 1,pos = 4)
+     col = color_pad[6], border = color_pad[6]);text(x=c(940), y=c(29),c(paste(SAMPLE1_name,"duplication",sep="")),cex = 1,pos = 4)
 rect(xleft = 900, xright = 930, ybottom = 30, ytop = 32,
-     col = color_pad[8], border = color_pad[8]);text(x=c(940), y=c(31),c(paste(SAMPLE2_name,"duplication",sep="")),cex = 1,pos = 4)
+     col = color_pad[7], border = color_pad[7]);text(x=c(940), y=c(31),c(paste(SAMPLE2_name,"duplication",sep="")),cex = 1,pos = 4)
 rect(xleft = 900, xright = 930, ybottom = 32, ytop = 34,
-     col = color_pad[9], border = color_pad[9]);text(x=c(940), y=c(33),c("Both_duplication"),cex = 1,pos = 4)
+     col = color_pad[8], border = color_pad[8]);text(x=c(940), y=c(33),c("Both_duplication"),cex = 1,pos = 4)
 for(j in 1:nrow(files)){
   if(!is.na(files[j,1])){
     data1 <- read.table(files[j,1], as.is = T, header = F, comment.char = "")
