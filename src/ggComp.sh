@@ -482,36 +482,36 @@ if test $MODE = "HMM_smoother" ;then
     fi
 
     (>&2 echo -n "Checking environment ... ")
-    python3 HMM_1_check_lib.py
+    python3 ${sp}/HMM_1_check_lib.py
     (>&2 echo "Done")
 
     current=`date "+%Y-%m-%d-%H:%M:%S"`
     (>&2 echo "Smoothing project: "$current)
 
     (>&2 echo -n "Building project ... ")
-    python3 HMM_2_copy_datafile.py $input $output $FolderNameList $current $Procs
+    python3 ${sp}/HMM_2_copy_datafile.py $input $output $FolderNameList $current $Procs
     (>&2 echo "Done")
 
     (>&2 echo -n "Pre-processing data ... ")
-    python3 HMM_3_sort_and_pre-process.py $output $current $Procs
+    python3 ${sp}/HMM_3_sort_and_pre-process.py $output $current $Procs
     (>&2 echo "Done")
 
     if ($TrainFlag); then
         (>&2 echo -n "Generating training data ... ")
-        python3 HMM_4_make_train_data.py $output $current
+        python3 ${sp}/HMM_4_make_train_data.py $output $current
         (>&2 echo "Done")
 
         (>&2 echo "Training ... ")
-        python3 HMM_5_train.py $output $current $Niter > $output/$current/6.3_remake_levelfile.py
+        python3 ${sp}/HMM_5_train.py $output $current $Niter > $output/$current/6.3_remake_levelfile.py
         (>&2 echo "Training ... Done")
 
         (>&2 echo -n "Smoothing ... ")
-        cat HMM_6.1_remake_levelfile.py $output/$current/HMM_6.3_remake_levelfile.py HMM_6.2_remake_levelfile.py > $output/$current/HMM_6_remake_levelfile.py
+        cat ${sp}/HMM_6.1_remake_levelfile.py $output/$current/HMM_6.3_remake_levelfile.py HMM_6.2_remake_levelfile.py > $output/$current/HMM_6_remake_levelfile.py
         python3 $output/$current/6_remake_levelfile.py $output $current $Procs
         (>&2 echo "Done")
     else
         (>&2 echo -n "Smoothing ... ")
-        python3 HMM_6_remake_levelfile.py $output $current $Procs
+        python3 ${sp}/HMM_6_remake_levelfile.py $output $current $Procs
         (>&2 echo "Done")
     fi
 fi

@@ -121,10 +121,9 @@ dup1 <- "#FF8B73"
 dup2 <- "#FFF073"
 dupboth <- "#AA0000"
 high <- "#111148"
-mid <-"#334899"
 low <- "#22BBEE"
 
-color_pad <- c(low,mid,high,del1,del2,delboth,dup1,dup2,dupboth)
+color_pad <- c(low,high,del1,del2,delboth,dup1,dup2,dupboth)
 num = 22
 centromere <- c(215,239,173,337,346,268,300,346,241,300,317,184,254,206,189,286,327,211,357,287,340)
 wholen <- c(594102056,
@@ -151,11 +150,9 @@ wholen <- c(594102056,
 )
 
 rect(xleft = 900, xright = 930, ybottom = 16, ytop = 18,
-     col = color_pad[1], border = color_pad[1]);text(x=c(940), y=c(17),c("Low_Diff"),cex = 1,pos = 4)
-rect(xleft = 900, xright = 930, ybottom = 18, ytop = 20,
-   col = color_pad[2], border = color_pad[2]);text(x=c(940), y=c(19),c("Mid_Diff"),cex = 1,pos = 4)
+     col = color_pad[1], border = color_pad[1]);text(x=c(940), y=c(17),c("SGR"),cex = 1,pos = 4)
 rect(xleft = 900, xright = 930, ybottom = 20, ytop = 22,
-   col = color_pad[3], border = color_pad[3]);text(x=c(940), y=c(21),c("High_Diff"),cex = 1,pos = 4)
+   col = color_pad[3], border = color_pad[3]);text(x=c(940), y=c(21),c("PHR"),cex = 1,pos = 4)
 rect(xleft = 900, xright = 930, ybottom = 22, ytop = 24,
      col = color_pad[4], border = color_pad[4]);text(x=c(940), y=c(23),c(paste(SAMPLE1_name,"deletion",sep="")),cex = 1,pos = 4)
 rect(xleft = 900, xright = 930, ybottom = 24, ytop = 26,
@@ -176,11 +173,11 @@ for(j in 1:nrow(files)){
 
     chro1 <- factor(chro, 
 
-                    levels = c("low","mid","high",
+                    levels = c("SGR","PHR",
                                paste(SAMPLE1,"deletion_CNV",sep=""),paste(SAMPLE2,"deletion_CNV",sep=""),"deletion_both_CNV",
                                paste(SAMPLE1,"duplication_CNV",sep=""),paste(SAMPLE2,"duplication_CNV",sep=""),"duplication_both_CNV"),
 
-                    labels = c('1','2','3',"4","5",'6',"7","8","9")
+                    labels = c('1','2','3',"4","5",'6',"7","8")
 
                     )
 

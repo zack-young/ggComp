@@ -30,7 +30,7 @@ for DIR in `cut -f4 ${config}|uniq`;do
     ave=`python ${path}/count_CNV.py -i ${DIR}/combine_1M_DP`
     for CHR in `echo $chr_lis`;do
         gawk -vOFS="\t" -vave=$ave '{print $1"\t"$2"\t"$3"\t"$4/ave}' ${DIR}/${CHR}.tmp > ${DIR}/${CHR}.norm
-        python ${path}/muti_func_snp_compare.py -i ${DIR}/${CHR}.norm --mask_cnv on -o ${DIR}/${CHR}.mask_CNV
+        python ${path}/muti_func_snp_compare.py -i ${DIR}/${CHR}.norm --mask_cnv on > ${DIR}/${CHR}.mask_CNV
         for item in {deletion,duplication};do
             grep "${item}" ${DIR}/${CHR}.mask_CNV > ${DIR}/${CHR}.mask_CNV_${item}
         done
