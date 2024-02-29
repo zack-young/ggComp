@@ -37,7 +37,7 @@ while read lines;do
             #echo 'file not zero'
             awk 'NR==FNR{a[$2]=$0;next}NR>FNR{if($2 in a ==0) print $1"\t"$2"\t"$3"\t"SAMPLE1 item "_CNV"}' SAMPLE1="$SAMPLE1" item="$item" ${SAMPLE2_DEV}/${chr}.mask_CNV_${item} ${SAMPLE1_DEV}/${chr}.mask_CNV_${item} > ${pair_DEV}/${chr}_${SAMPLE1}to${SAMPLE2}_own_CNV_${item}
         fi
-        awk 'NR==FNR{a[$2]=$0;next}NR>FNR{if($2 in a ==1) print $1"\t"$2"\t"$3"\t" $item "_both_CNV"}' item="$item" ${SAMPLE1_DEV}/${chr}.mask_CNV_${item} ${SAMPLE2_DEV}/${chr}.mask_CNV_${item} > ${pair_DEV}/${chr}_${SAMPLE1}to${SAMPLE2}both_CNV_${item}
+        awk 'NR==FNR{a[$2]=$0;next}NR>FNR{if($2 in a ==1) print $1"\t"$2"\t"$3"\t" item "_both_CNV"}' item="$item" ${SAMPLE1_DEV}/${chr}.mask_CNV_${item} ${SAMPLE2_DEV}/${chr}.mask_CNV_${item} > ${pair_DEV}/${chr}_${SAMPLE1}to${SAMPLE2}both_CNV_${item}
     #3  
         cat ${pair_DEV}/${chr}_${SAMPLE1}to${SAMPLE2}_own_CNV_${item} ${pair_DEV}/${chr}_${SAMPLE2}to${SAMPLE1}_own_CNV_${item} ${pair_DEV}/${chr}_${SAMPLE1}to${SAMPLE2}both_CNV_${item} > ${pair_DEV}/${chr}.${SAMPLE1}to${SAMPLE2}all_CNV_${item}
         done
