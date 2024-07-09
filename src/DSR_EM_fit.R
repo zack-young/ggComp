@@ -15,11 +15,11 @@ option_list <- list(
 
 parser <- OptionParser(usage = "mapdrawer [options]", option_list = option_list)
 arguments <- parse_args(parser, positional_arguments=c(0,Inf))
-num <- arguments$options$num
+num <- as.numeric(arguments$options$num)
 infile <- arguments$options$infile
 dt_all <- read_delim(infile, "\t", escape_double = FALSE, trim_ws = TRUE,col_names = F)
 
-mixmdla_2 <- normalmixEM(log(dt_all[[1]]+10,10),k=num) ## may need to use mean.constr parameter to constrain EM fitting analysis
+mixmdla_2 <- normalmixEM(log(dt_all[[1]]+10,10),k=num,maxit = 30) ## may need to use mean.constr parameter to constrain EM fitting analysis
 mu = c()
 sigma = c()
 lambd <- c()
