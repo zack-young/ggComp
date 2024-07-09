@@ -13,20 +13,29 @@ else:
 
 path = opath + "/" + timetag
 
-file1_backend = "homo_undefined_snp_level"
+#file1_backend = "homo_undefined_snp_level"
 
 folders= os.listdir(path)
 
 def process_data(folder):
 	if os.path.isdir(path + "/" + folder):
 		path_c = path + "/" + folder
-		for i in range(0,7):
-			for j in ["A", "B", "D"]:
-				shell = "sort -n -k 2 " + path_c + "/" + "chr" + str(i+1) + j + "." + file1_backend + " > " + path_c + "/" + "chr" + str(i+1) + j + "." + file1_backend + ".sorted"
-				os.system(shell)
-				f = open(path_c + "/" + "chr" + str(i+1) + j + "." + file1_backend + ".sorted")
-				lines1 = f.readlines()
-				f.close()
+		folders_c = os.listdir(path_c)
+		for files_c in folders_c:
+			print(files_c)
+			shell = "sort -n -k 2 " + path_c + "/" + files_c + " > " + path_c + "/" + files_c + ".sorted"
+			os.system(shell)
+			f = open(path_c + "/" + files_c + ".sorted")
+			lines1 = f.readlines()
+			f.close()
+		
+#		for i in range(0,7):
+#			for j in ["A", "B", "D"]:
+#				shell = "sort -n -k 2 " + path_c + "/" + "chr" + str(i+1) + j + "." + file1_backend + " > " + path_c + "/" + "chr" + str(i+1) + j + "." + file1_backend + ".sorted"
+#				os.system(shell)
+#				f = open(path_c + "/" + "chr" + str(i+1) + j + "." + file1_backend + ".sorted")
+#				lines1 = f.readlines()
+#				f.close()
 	return 0
 
 

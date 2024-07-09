@@ -18,15 +18,16 @@ with open(fpath) as f:
 
 os.system("mkdir -p " + opath + "/" + timetag)
 
+
 def copy_file(folder):
 	if os.path.isdir(path + "/" + folder):
 		path_c = path + "/" + folder
 		folders_c = os.listdir(path_c)
 		os.makedirs(opath + "/" + timetag + "/" + folder)
 		for folder_c in folders_c:
-			if folder_c[5:] == ".homo_undefined_snp_level":
-				shell = "ln -s " + path_c + "/" + folder_c + " " + opath + "/" + timetag + "/" + folder + "/"
-				os.system(shell)
+			#if folder_c[5:] == ".homo_undefined_snp_level":
+			shell = "ln -s " + path_c + "/" + folder_c + " " + opath + "/" + timetag + "/" + folder + "/"
+			os.system(shell)
 	return 0
 
 

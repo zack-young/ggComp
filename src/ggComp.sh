@@ -506,7 +506,7 @@ if test $MODE = "HMM_smoother" ;then
         (>&2 echo "Training ... Done")
 
         (>&2 echo -n "Smoothing ... ")
-        cat ${sp}/HMM_6.1_remake_levelfile.py $output/$current/HMM_6.3_remake_levelfile.py HMM_6.2_remake_levelfile.py > $output/$current/HMM_6_remake_levelfile.py
+        cat ${sp}/HMM_6_1_remake_levelfile.py $output/$current/HMM_6.3_remake_levelfile.py HMM_6_2_remake_levelfile.py > $output/$current/HMM_6_remake_levelfile.py
         python3 $output/$current/6_remake_levelfile.py $output $current $Procs
         (>&2 echo "Done")
     else

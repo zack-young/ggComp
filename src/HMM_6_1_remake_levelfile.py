@@ -17,9 +17,9 @@ else:
 
 path = opath + "/" + timetag
 
-file_backend = "homo_undefined_snp_level.sorted"
+file_backend = ".sorted"
 
-new_file_backend = "homo_undefined_snp_level.sorted.smoothed"
+new_file_backend = ".smoothed"
 
 states = ["SGR", "PHR", "CNV"]
 n_states = 3
