@@ -168,7 +168,7 @@ see test/plot.config for more details (colunms separated by tab)"
 This is the first step of ggComp that detect CNV regions through BAM files.  
 Each BAM file should contain only one chromosome and the chromosome name in first column of config file should consistent with that in BAM file.  
 BED file records bins that going to be processed.  
-Chromosomes that list in --chr_lis may not consistent with config file as chromosomes may be separated into parts in BAM file.  
+Chromosomes that list in --chr_lis should be consistent with config file as chromosomes may be separated into parts in BAM file.  
 e.g. `--chr_lis 'chr1A chr1B'` but in config file is `chr1A.1 chr1A.2 chr1B.2 chr1B.2`.  
 
 **single_CNV.config**
