@@ -204,7 +204,7 @@ compute the DSR from SNP by bins (default bin length: 1000000bp)
 
 **DSR_counter.config**
 ```
-test/SNP_extractor/chr1A_11-12Mb.SNP_gt test/DSR_counter/chr1A_11-12Mb.DSR  12000000
+test/SNP_extractor/chr1A_11-12Mb.SNP_gt test/DSR_counter/chr1A_11-12Mb.DSR  1000000
 ```
 ```
 sh src/ggComp.sh DSR_counter --config test/DSR_counter.config
