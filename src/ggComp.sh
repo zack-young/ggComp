@@ -15,7 +15,7 @@ parseCommandLine() {
 
     optstringLong="help::,input:,\
 chr_lis:,config:,config2:,single_CNV:,pair_CNV:,\
-output:,DP_low:,DP_high:,GQ_sample:,no_CNV:,plus_CNV:,\
+output:,DP_low:,DP_high:,GQ_threshold:,no_CNV:,plus_CNV:,\
 bin_size:,LEVEL:,version,folder_lis:,processes:,train,niter:"
 
     # - error message will be printed if unrecognized option or missing parameter but status will be 0
@@ -260,7 +260,7 @@ printUsageDSR() {
     echo ""
     echo "   --DP_high <INT>       exclude SNP with DP >= <int>. default 99"
     echo ""
-    echo "   --GQ_sample <INT>     exclude SNP with GQ <= <int>. default 8"
+    echo "   --GQ_threshold <INT>     exclude SNP with GQ <= <int>. default 8"
     echo ""
     echo "   --bin_size <INT>      bln size. default 1000000"
     echo ""
@@ -354,8 +354,6 @@ parseCommandLine "$@"
 par_num=`echo $@ | awk -F '\t' '{print NF}'`
 par_lis=$@
 if test "$par_num" = 1 ;then 
-[ "$par_lis" = "Pair_lis_generator" ] && printUsageLis && exit 0
-[ "$par_lis" = "BED_generato" ] && printUsageBED && exit 0
 [ "$par_lis" = "CNV_detector" ] && printUsageCNV && exit 0
 [ "$par_lis" = "SNP_extractor" ] && printUsageSNP && exit 0
 [ "$par_lis" = "DSR_counter" ] && printUsageDSR && exit 0
@@ -502,11 +500,11 @@ if test $MODE = "HMM_smoother" ;then
         (>&2 echo "Done")
 
         (>&2 echo "Training ... ")
-        python3 ${sp}/HMM_5_train.py $output $current $Niter > $output/$current/6.3_remake_levelfile.py
+        python3 ${sp}/HMM_5_train.py $output $current $Niter > $output/$current/HMM_6_3_remake_levelfile.py
         (>&2 echo "Training ... Done")
 
         (>&2 echo -n "Smoothing ... ")
-        cat ${sp}/HMM_6_1_remake_levelfile.py $output/$current/HMM_6.3_remake_levelfile.py HMM_6_2_remake_levelfile.py > $output/$current/HMM_6_remake_levelfile.py
+        cat ${sp}/HMM_6_1_remake_levelfile.py $output/$current/HMM_6_3_remake_levelfile.py HMM_6_2_remake_levelfile.py > $output/$current/HMM_6_remake_levelfile.py
         python3 $output/$current/6_remake_levelfile.py $output $current $Procs
         (>&2 echo "Done")
     else
